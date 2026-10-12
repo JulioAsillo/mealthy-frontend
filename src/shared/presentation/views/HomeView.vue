@@ -13,7 +13,9 @@ const appName = import.meta.env.VITE_APP_NAME ?? 'Mealthy'
         Descubre cómo alimentarse saludablemente puede ser rápido y delicioso con nuestras recetas
         saludables.
       </p>
-      <Button label="Únete" icon="pi pi-arrow-right" icon-pos="right" disabled />
+      <RouterLink :to="{ name: 'sign-up' }" custom v-slot="{ navigate }">
+        <Button label="Únete" icon="pi pi-arrow-right" icon-pos="right" @click="navigate" />
+      </RouterLink>
     </div>
     <img :src="heroImage" alt="Platos saludables" class="home__image" />
   </section>
