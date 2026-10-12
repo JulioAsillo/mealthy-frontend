@@ -77,6 +77,9 @@ export function createHttpClient(config: AxiosRequestConfig = {}): AxiosInstance
       const request = axios.isAxiosError(error) ? error.config : undefined
       if (request && !request.silent) hooks.onRequestEnd?.()
 
+      // Cancelaciones (AbortController) no son errores: se propagan tal cual.
+      if (axios.isCancel(error)) return Promise.reject(error)
+
       const apiError = toApiError(error)
 
       const canRefresh =

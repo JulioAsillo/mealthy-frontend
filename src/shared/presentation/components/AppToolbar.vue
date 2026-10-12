@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import Drawer from 'primevue/drawer'
 import logo from '@/assets/images/logo.jpg'
@@ -9,6 +10,16 @@ const props = defineProps<{ items: NavItem[] }>()
 
 const appName = import.meta.env.VITE_APP_NAME ?? 'Mealthy'
 const mobileMenuOpen = ref(false)
+const route = useRoute()
+const router = useRouter()
+
+/** Activo si la ruta actual está "debajo" del enlace (/recipes activa también /recipes/5). La raíz solo en exacto. */
+function isActive(item: NavItem): boolean {
+  const path = router.resolve(item.to).path
+  return path === '/'
+    ? route.path === '/'
+    : route.path === path || route.path.startsWith(`${path}/`)
+}
 </script>
 
 <template>
@@ -25,7 +36,8 @@ const mobileMenuOpen = ref(false)
           :key="item.label"
           :to="item.to"
           class="toolbar__link"
-          active-class="toolbar__link--active"
+          :class="{ 'toolbar__link--active': isActive(item) }"
+          :aria-current="isActive(item) ? 'page' : undefined"
         >
           <i v-if="item.icon" :class="item.icon" aria-hidden="true" />
           {{ item.label }}
@@ -50,7 +62,8 @@ const mobileMenuOpen = ref(false)
           :key="item.label"
           :to="item.to"
           class="toolbar__link"
-          active-class="toolbar__link--active"
+          :class="{ 'toolbar__link--active': isActive(item) }"
+          :aria-current="isActive(item) ? 'page' : undefined"
           @click="mobileMenuOpen = false"
         >
           <i v-if="item.icon" :class="item.icon" aria-hidden="true" />

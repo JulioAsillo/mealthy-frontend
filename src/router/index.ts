@@ -1,23 +1,16 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import PublicLayout from '@/shared/presentation/layouts/PublicLayout.vue'
+import AppLayout from '@/shared/presentation/layouts/AppLayout.vue'
 import { securityPrivateRoutes, securityPublicRoutes } from '@/security/security.routes'
+import { recipesRoutes } from '@/recipes/recipes.routes'
 
 /**
- * Dos layouts en la raíz:
- * - PublicLayout: home, auth, 403, 404.
- * - AppLayout: todo lo que exige sesión (meta.requiresAuth se hereda a los hijos).
- * Cada bounded context aporta sus rutas desde <contexto>.routes.ts.
+ * Un solo layout. Cada bounded context aporta sus rutas desde <contexto>.routes.ts;
+ * la protección va en meta de cada ruta (requiresAuth / guestOnly / roles).
  */
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@/shared/presentation/layouts/AppLayout.vue'),
-    meta: { requiresAuth: true },
-    children: [...securityPrivateRoutes],
-  },
-  {
-    path: '/',
-    component: PublicLayout,
+    component: AppLayout,
     children: [
       {
         path: '',
@@ -26,6 +19,8 @@ const routes: RouteRecordRaw[] = [
         meta: { title: 'Inicio' },
       },
       ...securityPublicRoutes,
+      ...securityPrivateRoutes,
+      ...recipesRoutes,
       {
         path: 'forbidden',
         name: 'forbidden',
@@ -45,7 +40,7 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior: () => ({ top: 0 }),
+  scrollBehavior: (_to, _from, saved) => saved ?? { top: 0 },
 })
 
 router.afterEach((to) => {
