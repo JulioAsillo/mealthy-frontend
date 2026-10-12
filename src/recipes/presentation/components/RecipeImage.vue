@@ -39,4 +39,9 @@ watch(
   color: var(--p-primary-500);
   font-size: 2rem;
 }
+
+.app-dark .recipe-image--placeholder {
+  background: linear-gradient(135deg, var(--p-surface-800), var(--p-surface-700));
+  color: var(--p-primary-400);
+}
 </style>

@@ -10,6 +10,7 @@ import { MealthyPreset, DARK_MODE_SELECTOR } from '@/shared/presentation/theme/m
 import { setupHttp } from '@/shared/application/setup-http'
 import { setupAuth } from '@/security/application/setup-auth'
 import { installGuards } from './router/guards'
+import { useThemeStore } from '@/shared/application/theme.store'
 
 import './assets/styles/main.css'
 
@@ -17,6 +18,8 @@ const app = createApp(App)
 const pinia = createPinia()
 
 app.use(pinia)
+// Aplica el tema antes del primer render para evitar el destello claro→oscuro.
+useThemeStore(pinia)
 // Guards antes de app.use(router): así protegen también la primera navegación.
 installGuards(router, pinia)
 app.use(router)
