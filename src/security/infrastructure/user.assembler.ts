@@ -1,4 +1,5 @@
 import { User } from '@/security/domain/model/user.entity'
+import { toDateOnly } from '@/shared/domain/model/date-only'
 import type { SignInForm, SignUpForm, UpdateProfileForm } from '@/security/domain/model/auth-forms'
 import type {
   SignInResource,
@@ -6,22 +7,6 @@ import type {
   UpdateProfileResource,
   UserResource,
 } from './auth.resources'
-
-/** Date local → "yyyy-MM-dd" sin desfase de zona horaria. */
-function toDateOnly(date: Date | null): string | null {
-  if (!date) return null
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
-
-/** "yyyy-MM-dd" → Date local (evita que new Date('2000-01-31') reste un día en Lima). */
-export function fromDateOnly(value: string | null): Date | null {
-  if (!value) return null
-  const [y, m, d] = value.split('-').map(Number)
-  return y && m && d ? new Date(y, m - 1, d) : null
-}
 
 const emptyToNull = (value: string): string | null => value.trim() || null
 
