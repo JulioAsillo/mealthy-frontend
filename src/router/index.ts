@@ -3,6 +3,7 @@ import AppLayout from '@/shared/presentation/layouts/AppLayout.vue'
 import { securityPrivateRoutes, securityPublicRoutes } from '@/security/security.routes'
 import { recipesRoutes } from '@/recipes/recipes.routes'
 import { pantryRoutes } from '@/pantry/pantry.routes'
+import { marketplaceRoutes } from '@/marketplace/marketplace.routes'
 
 /**
  * Un solo layout. Cada bounded context aporta sus rutas desde <contexto>.routes.ts;
@@ -23,6 +24,7 @@ const routes: RouteRecordRaw[] = [
       ...securityPrivateRoutes,
       ...recipesRoutes,
       ...pantryRoutes,
+      ...marketplaceRoutes,
       {
         path: 'forbidden',
         name: 'forbidden',
