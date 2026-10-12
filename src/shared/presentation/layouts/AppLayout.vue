@@ -17,17 +17,20 @@ const { isAuthenticated, role } = storeToRefs(useAuthStore())
 
 const RECIPES: NavItem = { label: 'Recetas', to: { name: 'recipes' }, icon: 'pi pi-book' }
 const PANTRY: NavItem = { label: 'Despensa', to: { name: 'pantry' }, icon: 'pi pi-shopping-bag' }
+const MARKET: NavItem = { label: 'Mercado', to: { name: 'market' }, icon: 'pi pi-shop' }
+const MY_STORE: NavItem = { label: 'Mi tienda', to: { name: 'my-store' }, icon: 'pi pi-briefcase' }
 
-/** Fase 6 añadirá Mercado y Mi tienda. */
+/** La fase Admin añadirá el panel de administración. */
 const NAV_BY_ROLE: Record<Role, NavItem[]> = {
-  Customer: [RECIPES, PANTRY],
-  StoreOwner: [RECIPES],
-  Admin: [RECIPES],
+  Customer: [RECIPES, PANTRY, MARKET],
+  StoreOwner: [MY_STORE, MARKET, RECIPES],
+  Admin: [RECIPES, MARKET],
 }
 
 const PUBLIC_NAV: NavItem[] = [
   { label: 'Inicio', to: { name: 'home' }, icon: 'pi pi-home' },
   RECIPES,
+  MARKET,
 ]
 
 const items = computed<NavItem[]>(() =>

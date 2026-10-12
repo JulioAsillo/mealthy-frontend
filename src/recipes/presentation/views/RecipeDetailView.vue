@@ -209,15 +209,20 @@ function confirmDelete() {
               <span class="detail__qty">{{ ingredient.display }} {{ ingredient.unit }}</span>
               <span class="detail__ingredient-name">{{ ingredient.name }}</span>
               <i
-                v-if="ingredient.inPantry !== null"
-                :class="
-                  ingredient.inPantry
-                    ? 'pi pi-check-circle detail__have'
-                    : 'pi pi-cart-plus detail__missing'
-                "
-                :title="ingredient.inPantry ? 'Lo tienes en tu despensa' : 'Te falta'"
-                :aria-label="ingredient.inPantry ? 'En tu despensa' : 'Te falta'"
+                v-if="ingredient.inPantry"
+                class="pi pi-check-circle detail__have"
+                title="Lo tienes en tu despensa"
+                aria-label="En tu despensa"
               />
+              <RouterLink
+                v-else-if="ingredient.inPantry === false"
+                :to="{ name: 'market', query: { tab: 'products', q: ingredient.name } }"
+                class="detail__missing"
+                :title="`Buscar ${ingredient.name} en el mercado`"
+                :aria-label="`Te falta ${ingredient.name}: buscar en el mercado`"
+              >
+                <i class="pi pi-cart-plus" aria-hidden="true" />
+              </RouterLink>
             </li>
           </ul>
           <p v-else class="detail__muted">Sin ingredientes registrados.</p>
@@ -403,6 +408,11 @@ function confirmDelete() {
 
 .detail__missing {
   color: var(--p-text-muted-color);
+  text-decoration: none;
+}
+
+.detail__missing:hover {
+  color: var(--p-primary-color);
 }
 
 .detail__qty {
