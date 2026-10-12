@@ -44,3 +44,57 @@ a {
   color: var(--p-primary-color);
   font-weight: 600;
 }
+
+/* ---------- Accesibilidad ---------- */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 1100;
+  padding: 0.5rem 1rem;
+  border-radius: var(--p-border-radius-md);
+  background: var(--p-content-background);
+  color: var(--p-primary-color);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+:focus-visible {
+  outline-color: var(--p-primary-color);
+}
+
+::selection {
+  background: var(--p-primary-200);
+  color: var(--p-surface-900);
+}
+
+/* ---------- Transiciones entre páginas ---------- */
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.page-leave-to {
+  opacity: 0;
+}
+
+/* Respeta a quienes desactivan animaciones en su sistema. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

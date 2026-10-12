@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import Button from 'primevue/button'
 import AppToolbar from '@/shared/presentation/components/AppToolbar.vue'
 import AppFooter from '@/shared/presentation/components/AppFooter.vue'
 import UserMenu from '@/shared/presentation/components/UserMenu.vue'
+import ThemeToggle from '@/shared/presentation/components/ThemeToggle.vue'
 import type { NavItem } from '@/shared/presentation/components/nav-item'
 import { useAuthStore } from '@/security/application/auth.store'
 import type { Role } from '@/security/domain/model/role'
@@ -33,6 +35,18 @@ const PUBLIC_NAV: NavItem[] = [
   MARKET,
 ]
 
+// Accesibilidad: al cambiar de página, el foco va al contenido (lectores de pantalla anuncian la nueva vista).
+const route = useRoute()
+const main = ref<HTMLElement | null>(null)
+watch(
+  () => route.path,
+  async (_to, from) => {
+    if (from === undefined) return
+    await nextTick()
+    main.value?.focus({ preventScroll: true })
+  },
+)
+
 const items = computed<NavItem[]>(() =>
   isAuthenticated.value && role.value ? NAV_BY_ROLE[role.value] : PUBLIC_NAV,
 )
@@ -40,8 +54,10 @@ const items = computed<NavItem[]>(() =>
 
 <template>
   <div class="layout">
+    <a href="#main" class="skip-link">Saltar al contenido</a>
     <AppToolbar :items="items">
       <template #end>
+        <ThemeToggle />
         <UserMenu v-if="isAuthenticated" />
         <template v-else>
           <RouterLink :to="{ name: 'sign-in' }" class="layout__link">Iniciar sesión</RouterLink>
@@ -51,8 +67,12 @@ const items = computed<NavItem[]>(() =>
         </template>
       </template>
     </AppToolbar>
-    <main class="layout__content">
-      <RouterView />
+    <main id="main" ref="main" class="layout__content" tabindex="-1">
+      <RouterView v-slot="{ Component, route: current }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" :key="current.path" />
+        </Transition>
+      </RouterView>
     </main>
     <AppFooter />
   </div>
@@ -67,6 +87,10 @@ const items = computed<NavItem[]>(() =>
 
 .layout__content {
   flex: 1;
+}
+
+.layout__content:focus {
+  outline: none;
 }
 
 .layout__link {
