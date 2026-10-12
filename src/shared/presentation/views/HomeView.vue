@@ -6,19 +6,17 @@ const appName = import.meta.env.VITE_APP_NAME ?? 'Mealthy'
 </script>
 
 <template>
-  <main class="home container">
-    <section class="home__text">
+  <section class="home container">
+    <div class="home__text">
       <h1>Bienvenido a {{ appName }}</h1>
       <p>
-        Descubre cómo alimentarse saludablemente puede ser rápido y delicioso con nuestras
-        recetas saludables.
+        Descubre cómo alimentarse saludablemente puede ser rápido y delicioso con nuestras recetas
+        saludables.
       </p>
-      <!-- Fase 3: enlazar a /sign-up -->
       <Button label="Únete" icon="pi pi-arrow-right" icon-pos="right" disabled />
-      <small class="home__hint">Fase 1 · bootstrap listo</small>
-    </section>
+    </div>
     <img :src="heroImage" alt="Platos saludables" class="home__image" />
-  </main>
+  </section>
 </template>
 
 <style scoped>
@@ -27,7 +25,7 @@ const appName = import.meta.env.VITE_APP_NAME ?? 'Mealthy'
   grid-template-columns: 1fr 1fr;
   align-items: center;
   gap: 2rem;
-  min-height: 100vh;
+  min-height: calc(100vh - 64px - 53px);
 }
 
 .home__text h1 {
@@ -40,12 +38,6 @@ const appName = import.meta.env.VITE_APP_NAME ?? 'Mealthy'
   font-size: 1.125rem;
   line-height: 1.6;
   margin: 0 0 1.5rem;
-}
-
-.home__hint {
-  display: block;
-  margin-top: 1rem;
-  color: var(--p-text-muted-color);
 }
 
 .home__image {

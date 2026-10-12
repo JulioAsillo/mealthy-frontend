@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import PublicLayout from '@/shared/presentation/layouts/PublicLayout.vue'
 
 /**
  * Rutas raíz. Cada bounded context aportará sus rutas en <contexto>.routes.ts
@@ -7,15 +8,27 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
-    component: () => import('@/shared/presentation/views/HomeView.vue'),
-    meta: { title: 'Inicio' },
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'not-found',
-    component: () => import('@/shared/presentation/views/NotFoundView.vue'),
-    meta: { title: 'Página no encontrada' },
+    component: PublicLayout,
+    children: [
+      {
+        path: '',
+        name: 'home',
+        component: () => import('@/shared/presentation/views/HomeView.vue'),
+        meta: { title: 'Inicio' },
+      },
+      {
+        path: 'forbidden',
+        name: 'forbidden',
+        component: () => import('@/shared/presentation/views/ForbiddenView.vue'),
+        meta: { title: 'Acceso denegado' },
+      },
+      {
+        path: ':pathMatch(.*)*',
+        name: 'not-found',
+        component: () => import('@/shared/presentation/views/NotFoundView.vue'),
+        meta: { title: 'Página no encontrada' },
+      },
+    ],
   },
 ]
 

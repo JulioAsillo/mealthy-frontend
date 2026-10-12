@@ -6,7 +6,7 @@ const route = useRoute()
 </script>
 
 <template>
-  <main class="not-found container">
+  <section class="not-found container">
     <span class="not-found__code">404</span>
     <h1>Página no encontrada</h1>
     <p>
@@ -15,12 +15,12 @@ const route = useRoute()
     <RouterLink to="/" custom v-slot="{ navigate }">
       <Button label="Volver al inicio" icon="pi pi-home" @click="navigate" />
     </RouterLink>
-  </main>
+  </section>
 </template>
 
 <style scoped>
 .not-found {
-  min-height: 100vh;
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: center;
