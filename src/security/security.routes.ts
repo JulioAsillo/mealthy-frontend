@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-/** Rutas sin sesión (van dentro de PublicLayout). */
+/** Rutas solo para visitantes sin sesión. */
 export const securityPublicRoutes: RouteRecordRaw[] = [
   {
     path: 'sign-in',
@@ -16,12 +16,12 @@ export const securityPublicRoutes: RouteRecordRaw[] = [
   },
 ]
 
-/** Rutas con sesión (van dentro de AppLayout, que ya exige requiresAuth). */
+/** Rutas que exigen sesión. */
 export const securityPrivateRoutes: RouteRecordRaw[] = [
   {
     path: 'profile',
     name: 'profile',
     component: () => import('./presentation/views/ProfileView.vue'),
-    meta: { title: 'Mi perfil' },
+    meta: { title: 'Mi perfil', requiresAuth: true },
   },
 ]
