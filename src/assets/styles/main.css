@@ -39,3 +39,8 @@ img {
   margin-inline: auto;
   padding-inline: 1rem;
 }
+
+a {
+  color: var(--p-primary-color);
+  font-weight: 600;
+}
