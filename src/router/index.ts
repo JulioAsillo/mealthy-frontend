@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import AppLayout from '@/shared/presentation/layouts/AppLayout.vue'
 import { securityPrivateRoutes, securityPublicRoutes } from '@/security/security.routes'
 import { recipesRoutes } from '@/recipes/recipes.routes'
+import { pantryRoutes } from '@/pantry/pantry.routes'
 
 /**
  * Un solo layout. Cada bounded context aporta sus rutas desde <contexto>.routes.ts;
@@ -21,6 +22,7 @@ const routes: RouteRecordRaw[] = [
       ...securityPublicRoutes,
       ...securityPrivateRoutes,
       ...recipesRoutes,
+      ...pantryRoutes,
       {
         path: 'forbidden',
         name: 'forbidden',

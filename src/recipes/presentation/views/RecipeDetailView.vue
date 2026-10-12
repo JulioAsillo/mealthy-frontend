@@ -17,6 +17,7 @@ import {
   type RecipeDetail,
 } from '@/recipes/domain/model/recipe.entity'
 import RecipeImage from '@/recipes/presentation/components/RecipeImage.vue'
+import { usePantryStore } from '@/pantry/application/pantry.store'
 
 const props = defineProps<{ id: number }>()
 
@@ -25,6 +26,17 @@ const confirm = useConfirm()
 const notify = useNotify()
 const auth = useAuthStore()
 const store = useRecipesStore()
+const pantry = usePantryStore()
+
+/** Solo los clientes tienen despensa: se carga en segundo plano y sin bloquear la vista. */
+const canUsePantry = computed(() => auth.hasRole('Customer'))
+watch(
+  canUsePantry,
+  (enabled) => {
+    if (enabled) pantry.load().catch(() => undefined)
+  },
+  { immediate: true },
+)
 
 const recipe = ref<RecipeDetail | null>(null)
 const notFound = ref(false)
@@ -58,8 +70,16 @@ const scaledIngredients = computed(() =>
     display: quantityFormat.format(
       scaleQuantity(i.quantity, recipe.value!.servings, servings.value || 1),
     ),
+    inPantry: canUsePantry.value && pantry.loaded ? !!pantry.findMatch(i.name) : null,
   })),
 )
+
+const pantrySummary = computed(() => {
+  const list = scaledIngredients.value
+  if (!list.length || list[0]!.inPantry === null) return null
+  const have = list.filter((i) => i.inPantry).length
+  return { have, total: list.length }
+})
 
 const progress = computed(() => {
   const total = recipe.value?.steps.length ?? 0
@@ -180,10 +200,24 @@ function confirmDelete() {
           <p v-if="servings !== recipe.servings" class="detail__scaled-note">
             Cantidades ajustadas de {{ recipe.servings }} a {{ servings }} porciones.
           </p>
+          <p v-if="pantrySummary" class="detail__pantry-summary">
+            <i class="pi pi-shopping-bag" aria-hidden="true" />
+            Tienes {{ pantrySummary.have }} de {{ pantrySummary.total }} ingredientes en tu despensa
+          </p>
           <ul v-if="scaledIngredients.length" class="detail__ingredients">
             <li v-for="ingredient in scaledIngredients" :key="ingredient.id">
               <span class="detail__qty">{{ ingredient.display }} {{ ingredient.unit }}</span>
-              <span>{{ ingredient.name }}</span>
+              <span class="detail__ingredient-name">{{ ingredient.name }}</span>
+              <i
+                v-if="ingredient.inPantry !== null"
+                :class="
+                  ingredient.inPantry
+                    ? 'pi pi-check-circle detail__have'
+                    : 'pi pi-cart-plus detail__missing'
+                "
+                :title="ingredient.inPantry ? 'Lo tienes en tu despensa' : 'Te falta'"
+                :aria-label="ingredient.inPantry ? 'En tu despensa' : 'Te falta'"
+              />
             </li>
           </ul>
           <p v-else class="detail__muted">Sin ingredientes registrados.</p>
@@ -346,6 +380,29 @@ function confirmDelete() {
 
 .detail__ingredients li:last-child {
   border-bottom: 0;
+}
+
+.detail__pantry-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--p-border-radius-md);
+  background: color-mix(in srgb, var(--p-primary-color) 8%, transparent);
+  margin: 0 0 0.75rem;
+}
+
+.detail__ingredient-name {
+  flex: 1;
+}
+
+.detail__have {
+  color: var(--p-green-500);
+}
+
+.detail__missing {
+  color: var(--p-text-muted-color);
 }
 
 .detail__qty {

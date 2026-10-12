@@ -13,7 +13,7 @@ import { useNotify } from '@/shared/presentation/composables/useNotify'
 import { useAuthStore } from '@/security/application/auth.store'
 import { ROLE_LABELS } from '@/security/domain/model/role'
 import type { UpdateProfileForm } from '@/security/domain/model/auth-forms'
-import { fromDateOnly } from '@/security/infrastructure/user.assembler'
+import { fromDateOnly } from '@/shared/domain/model/date-only'
 
 const auth = useAuthStore()
 const { user } = storeToRefs(auth)

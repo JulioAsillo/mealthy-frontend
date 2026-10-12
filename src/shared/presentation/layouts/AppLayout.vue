@@ -16,10 +16,11 @@ import type { Role } from '@/security/domain/model/role'
 const { isAuthenticated, role } = storeToRefs(useAuthStore())
 
 const RECIPES: NavItem = { label: 'Recetas', to: { name: 'recipes' }, icon: 'pi pi-book' }
+const PANTRY: NavItem = { label: 'Despensa', to: { name: 'pantry' }, icon: 'pi pi-shopping-bag' }
 
-/** Fases 5-6 añadirán Despensa, Mercado y Mi tienda. */
+/** Fase 6 añadirá Mercado y Mi tienda. */
 const NAV_BY_ROLE: Record<Role, NavItem[]> = {
-  Customer: [RECIPES],
+  Customer: [RECIPES, PANTRY],
   StoreOwner: [RECIPES],
   Admin: [RECIPES],
 }
