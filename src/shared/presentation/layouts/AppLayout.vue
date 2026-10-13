@@ -21,12 +21,12 @@ const RECIPES: NavItem = { label: 'Recetas', to: { name: 'recipes' }, icon: 'pi 
 const PANTRY: NavItem = { label: 'Despensa', to: { name: 'pantry' }, icon: 'pi pi-shopping-bag' }
 const MARKET: NavItem = { label: 'Mercado', to: { name: 'market' }, icon: 'pi pi-shop' }
 const MY_STORE: NavItem = { label: 'Mi tienda', to: { name: 'my-store' }, icon: 'pi pi-briefcase' }
+const ADMIN: NavItem = { label: 'Panel', to: { name: 'admin-dashboard' }, icon: 'pi pi-shield' }
 
-/** La fase Admin añadirá el panel de administración. */
 const NAV_BY_ROLE: Record<Role, NavItem[]> = {
   Customer: [RECIPES, PANTRY, MARKET],
   StoreOwner: [MY_STORE, MARKET, RECIPES],
-  Admin: [RECIPES, MARKET],
+  Admin: [ADMIN, RECIPES, MARKET],
 }
 
 const PUBLIC_NAV: NavItem[] = [
