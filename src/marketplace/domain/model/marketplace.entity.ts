@@ -3,7 +3,7 @@ export interface Store {
   name: string
   description: string
   ruc: string
-  photoUrl: string | null
+  imageId: number | null
   ownerId: number
   createdAt: Date
 }
@@ -16,7 +16,7 @@ export interface Product {
   price: number
   unit: string
   stock: number
-  photoUrl: string | null
+  imageId: number | null
   createdAt: Date
   updatedAt: Date | null
 }

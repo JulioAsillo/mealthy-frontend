@@ -4,7 +4,7 @@ export interface StoreResource {
   name: string
   description: string
   ruc: string
-  photoUrl: string | null
+  imageId: number | null
   ownerId: number
   createdAt: string
 }
@@ -13,7 +13,7 @@ export interface CreateStoreResource {
   name: string
   description: string
   ruc: string
-  photoUrl: string | null
+  imageId: number | null
 }
 
 export type UpdateStoreResource = Omit<CreateStoreResource, 'ruc'>
@@ -26,7 +26,7 @@ export interface ProductResource {
   price: number
   unit: string
   stock: number
-  photoUrl: string | null
+  imageId: number | null
   createdAt: string
   updatedAt: string | null
 }
@@ -37,5 +37,5 @@ export interface ProductRequestResource {
   price: number
   unit: string
   stock: number
-  photoUrl: string | null
+  imageId: number | null
 }

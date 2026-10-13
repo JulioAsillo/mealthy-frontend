@@ -17,7 +17,7 @@ export interface RecipeSummary {
   description: string
   preparationMinutes: number
   servings: number
-  photoUrl: string | null
+  imageId: number | null
   authorId: number
   createdAt: Date
 }

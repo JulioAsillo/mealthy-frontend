@@ -41,7 +41,7 @@ export const RecipeAssembler = {
       description: r.description,
       preparationMinutes: r.preparationMinutes,
       servings: r.servings,
-      photoUrl: r.photoUrl ?? '',
+      imageId: r.imageId,
       ingredients: r.ingredients.map((i) => ({ key: newKey(), ...i })),
       steps: r.steps.map((s) => ({ key: newKey(), id: s.id, description: s.description })),
     }
@@ -61,7 +61,7 @@ export const RecipeAssembler = {
       description: form.description.trim(),
       preparationMinutes: form.preparationMinutes ?? 0,
       servings: form.servings ?? 0,
-      photoUrl: form.photoUrl.trim() || null,
+      imageId: form.imageId,
     }
   },
 

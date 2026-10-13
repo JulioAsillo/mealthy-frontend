@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
 import FormField from '@/shared/presentation/components/FormField.vue'
+import ImageUploader from '@/media/presentation/components/ImageUploader.vue'
 import { useApiForm } from '@/shared/presentation/composables/useApiForm'
 import { useMyStoreStore } from '@/marketplace/application/my-store.store'
 import { PRODUCT_CATEGORIES, type Product } from '@/marketplace/domain/model/marketplace.entity'
@@ -19,6 +20,7 @@ const emit = defineEmits<{ saved: [product: Product] }>()
 const myStore = useMyStoreStore()
 const { submitting, submit, fieldError, generalError, reset } = useApiForm()
 const form = reactive<ProductForm>(emptyProductForm())
+const uploadingImage = ref(false)
 
 watch(visible, (open) => {
   if (!open) return
@@ -35,7 +37,8 @@ const canSubmit = computed(
     form.category.trim().length >= 2 &&
     (form.price ?? 0) > 0 &&
     form.unit.trim() !== '' &&
-    (form.stock ?? -1) >= 0,
+    (form.stock ?? -1) >= 0 &&
+    !uploadingImage.value,
 )
 
 async function onSubmit() {
@@ -111,18 +114,13 @@ async function onSubmit() {
         <InputNumber v-model="form.stock" input-id="product-stock" :min="0" show-buttons />
       </FormField>
 
-      <FormField
-        label="URL de la foto"
-        for="product-photo"
-        optional
-        :error="fieldError('photoUrl')"
-      >
-        <InputText
-          id="product-photo"
-          v-model="form.photoUrl"
-          type="url"
-          maxlength="500"
-          placeholder="https://…"
+      <FormField label="Foto" for="product-photo" optional :error="fieldError('imageId')">
+        <ImageUploader
+          v-model="form.imageId"
+          v-model:busy="uploadingImage"
+          input-id="product-photo"
+          :alt="form.name || 'Foto del producto'"
+          icon="pi pi-shopping-cart"
         />
       </FormField>
     </form>

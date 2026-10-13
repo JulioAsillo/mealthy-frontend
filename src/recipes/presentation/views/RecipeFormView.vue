@@ -17,7 +17,7 @@ import type { RecipeDetail } from '@/recipes/domain/model/recipe.entity'
 import { RecipeAssembler } from '@/recipes/infrastructure/recipe.assembler'
 import IngredientsEditor from '@/recipes/presentation/components/IngredientsEditor.vue'
 import StepsEditor from '@/recipes/presentation/components/StepsEditor.vue'
-import RecipeImage from '@/recipes/presentation/components/RecipeImage.vue'
+import ImageUploader from '@/media/presentation/components/ImageUploader.vue'
 
 /** Sin id = crear; con id = editar. */
 const props = defineProps<{ id?: number }>()
@@ -32,6 +32,7 @@ const isEdit = computed(() => props.id !== undefined)
 const original = ref<RecipeDetail | null>(null)
 const loading = ref(false)
 const form = reactive<RecipeForm>(emptyRecipeForm())
+const uploadingImage = ref(false)
 
 watch(
   () => props.id,
@@ -59,16 +60,13 @@ watch(
   { immediate: true },
 )
 
-const photoPreview = computed(() =>
-  /^https?:\/\//i.test(form.photoUrl.trim()) ? form.photoUrl.trim() : null,
-)
-
 const canSubmit = computed(
   () =>
     form.title.trim().length >= 3 &&
     form.description.trim() !== '' &&
     (form.preparationMinutes ?? 0) >= 1 &&
-    (form.servings ?? 0) >= 1,
+    (form.servings ?? 0) >= 1 &&
+    !uploadingImage.value,
 )
 
 async function onSubmit() {
@@ -159,28 +157,22 @@ function cancel() {
                 />
               </FormField>
             </div>
-
-            <FormField
-              label="URL de la foto"
-              for="photoUrl"
-              optional
-              :error="fieldError('photoUrl')"
-              hint="Enlace https a una imagen"
-            >
-              <InputText
-                id="photoUrl"
-                v-model="form.photoUrl"
-                type="url"
-                maxlength="500"
-                placeholder="https://…"
-                :invalid="!!fieldError('photoUrl')"
-              />
-            </FormField>
           </div>
 
-          <div class="recipe-form__preview" aria-label="Vista previa de la foto">
-            <RecipeImage :src="photoPreview" :alt="form.title || 'Vista previa'" />
-          </div>
+          <FormField
+            label="Foto"
+            for="recipe-photo"
+            optional
+            :error="fieldError('imageId')"
+            class="recipe-form__photo"
+          >
+            <ImageUploader
+              v-model="form.imageId"
+              v-model:busy="uploadingImage"
+              input-id="recipe-photo"
+              :alt="form.title || 'Foto de la receta'"
+            />
+          </FormField>
         </div>
       </div>
 
@@ -271,10 +263,7 @@ function cancel() {
   width: 100%;
 }
 
-.recipe-form__preview {
-  aspect-ratio: 4 / 3;
-  border-radius: var(--p-border-radius-lg);
-  overflow: hidden;
+.recipe-form__photo {
   align-self: start;
 }
 
@@ -295,7 +284,7 @@ function cancel() {
     grid-template-columns: 1fr;
   }
 
-  .recipe-form__preview {
+  .recipe-form__photo {
     order: -1;
   }
 }

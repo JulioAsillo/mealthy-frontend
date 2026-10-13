@@ -10,7 +10,7 @@ import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import Skeleton from 'primevue/skeleton'
 import EmptyState from '@/shared/presentation/components/EmptyState.vue'
-import SmartImage from '@/shared/presentation/components/SmartImage.vue'
+import MediaImage from '@/media/presentation/components/MediaImage.vue'
 import { useNotify } from '@/shared/presentation/composables/useNotify'
 import { normalizeName } from '@/pantry/domain/model/ingredient-match'
 import { useMyStoreStore } from '@/marketplace/application/my-store.store'
@@ -91,7 +91,7 @@ function confirmDelete(p: Product) {
     <template v-else-if="store">
       <header class="my-store__hero">
         <div class="my-store__logo">
-          <SmartImage :src="store.photoUrl" :alt="store.name" icon="pi pi-shop" />
+          <MediaImage :image-id="store.imageId" variant="sm" :alt="store.name" icon="pi pi-shop" />
         </div>
         <div class="my-store__info">
           <h1>{{ store.name }}</h1>
@@ -182,7 +182,12 @@ function confirmDelete(p: Product) {
           <Column header="" class="my-store__thumb-col">
             <template #body="{ data }">
               <div class="my-store__thumb">
-                <SmartImage :src="data.photoUrl" :alt="data.name" icon="pi pi-shopping-cart" />
+                <MediaImage
+                  :image-id="data.imageId"
+                  variant="sm"
+                  :alt="data.name"
+                  icon="pi pi-shopping-cart"
+                />
               </div>
             </template>
           </Column>

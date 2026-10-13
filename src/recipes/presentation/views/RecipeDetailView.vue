@@ -16,7 +16,7 @@ import {
   scaleQuantity,
   type RecipeDetail,
 } from '@/recipes/domain/model/recipe.entity'
-import RecipeImage from '@/recipes/presentation/components/RecipeImage.vue'
+import MediaImage from '@/media/presentation/components/MediaImage.vue'
 import { usePantryStore } from '@/pantry/application/pantry.store'
 
 const props = defineProps<{ id: number }>()
@@ -135,7 +135,7 @@ function confirmDelete() {
 
     <article v-else>
       <div class="detail__hero">
-        <RecipeImage :src="recipe.photoUrl" :alt="recipe.title" />
+        <MediaImage :image-id="recipe.imageId" variant="lg" :alt="recipe.title" />
       </div>
 
       <header class="detail__header">

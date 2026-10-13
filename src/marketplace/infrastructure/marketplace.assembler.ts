@@ -9,8 +9,6 @@ import type {
   UpdateStoreResource,
 } from './marketplace.resources'
 
-const nullIfEmpty = (v: string) => v.trim() || null
-
 export const MarketplaceAssembler = {
   toStore(r: StoreResource): Store {
     return { ...r, createdAt: new Date(r.createdAt) }
@@ -33,7 +31,7 @@ export const MarketplaceAssembler = {
   },
 
   toStoreForm(s: Store): StoreForm {
-    return { name: s.name, description: s.description, ruc: s.ruc, photoUrl: s.photoUrl ?? '' }
+    return { name: s.name, description: s.description, ruc: s.ruc, imageId: s.imageId }
   },
 
   toProductForm(p: Product): ProductForm {
@@ -43,7 +41,7 @@ export const MarketplaceAssembler = {
       price: p.price,
       unit: p.unit,
       stock: p.stock,
-      photoUrl: p.photoUrl ?? '',
+      imageId: p.imageId,
     }
   },
 
@@ -52,7 +50,7 @@ export const MarketplaceAssembler = {
       name: f.name.trim(),
       description: f.description.trim(),
       ruc: f.ruc.trim(),
-      photoUrl: nullIfEmpty(f.photoUrl),
+      imageId: f.imageId,
     }
   },
 
@@ -60,7 +58,7 @@ export const MarketplaceAssembler = {
     return {
       name: f.name.trim(),
       description: f.description.trim(),
-      photoUrl: nullIfEmpty(f.photoUrl),
+      imageId: f.imageId,
     }
   },
 
@@ -71,7 +69,7 @@ export const MarketplaceAssembler = {
       price: f.price ?? 0,
       unit: f.unit.trim(),
       stock: f.stock ?? 0,
-      photoUrl: nullIfEmpty(f.photoUrl),
+      imageId: f.imageId,
     }
   },
 }

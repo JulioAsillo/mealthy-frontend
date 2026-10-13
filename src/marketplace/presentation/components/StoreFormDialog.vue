@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Button from 'primevue/button'
 import Message from 'primevue/message'
 import FormField from '@/shared/presentation/components/FormField.vue'
+import ImageUploader from '@/media/presentation/components/ImageUploader.vue'
 import { useApiForm } from '@/shared/presentation/composables/useApiForm'
 import { useMyStoreStore } from '@/marketplace/application/my-store.store'
 import { RUC_PATTERN, type Store } from '@/marketplace/domain/model/marketplace.entity'
@@ -20,6 +21,7 @@ const emit = defineEmits<{ saved: [] }>()
 const myStore = useMyStoreStore()
 const { submitting, submit, fieldError, generalError, reset } = useApiForm()
 const form = reactive<StoreForm>(emptyStoreForm())
+const uploadingImage = ref(false)
 
 watch(
   visible,
@@ -40,7 +42,8 @@ const canSubmit = computed(
   () =>
     form.name.trim().length >= 2 &&
     form.description.trim() !== '' &&
-    (!!props.store || RUC_PATTERN.test(form.ruc)),
+    (!!props.store || RUC_PATTERN.test(form.ruc)) &&
+    !uploadingImage.value,
 )
 
 async function onSubmit() {
@@ -107,18 +110,13 @@ async function onSubmit() {
         />
       </FormField>
 
-      <FormField
-        label="URL del logo o foto"
-        for="store-photo"
-        optional
-        :error="fieldError('photoUrl')"
-      >
-        <InputText
-          id="store-photo"
-          v-model="form.photoUrl"
-          type="url"
-          maxlength="500"
-          placeholder="https://…"
+      <FormField label="Logo o foto" for="store-photo" optional :error="fieldError('imageId')">
+        <ImageUploader
+          v-model="form.imageId"
+          v-model:busy="uploadingImage"
+          input-id="store-photo"
+          :alt="form.name || 'Logo de la tienda'"
+          icon="pi pi-shop"
         />
       </FormField>
     </form>

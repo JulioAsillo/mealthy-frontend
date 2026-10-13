@@ -19,7 +19,7 @@ export interface RecipeSummaryResource {
   description: string
   preparationMinutes: number
   servings: number
-  photoUrl: string | null
+  imageId: number | null
   authorId: number
   createdAt: string
 }
@@ -45,7 +45,7 @@ export interface UpdateRecipeResource {
   description: string
   preparationMinutes: number
   servings: number
-  photoUrl: string | null
+  imageId: number | null
 }
 
 export interface CreateRecipeResource extends UpdateRecipeResource {

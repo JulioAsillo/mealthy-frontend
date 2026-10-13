@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { formatPrice, type Product } from '@/marketplace/domain/model/marketplace.entity'
-import SmartImage from '@/shared/presentation/components/SmartImage.vue'
+import MediaImage from '@/media/presentation/components/MediaImage.vue'
 import StockTag from './StockTag.vue'
 
 defineProps<{ product: Product; showStoreLink?: boolean }>()
@@ -9,7 +9,12 @@ defineProps<{ product: Product; showStoreLink?: boolean }>()
 <template>
   <article class="product-card" :class="{ 'product-card--out': product.stock <= 0 }">
     <div class="product-card__media">
-      <SmartImage :src="product.photoUrl" :alt="product.name" icon="pi pi-shopping-cart" />
+      <MediaImage
+        :image-id="product.imageId"
+        variant="sm"
+        :alt="product.name"
+        icon="pi pi-shopping-cart"
+      />
     </div>
     <div class="product-card__body">
       <span class="product-card__category">{{ product.category }}</span>

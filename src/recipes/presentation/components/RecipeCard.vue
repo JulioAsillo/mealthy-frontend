@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { formatDuration, type RecipeSummary } from '@/recipes/domain/model/recipe.entity'
-import RecipeImage from './RecipeImage.vue'
+import MediaImage from '@/media/presentation/components/MediaImage.vue'
 
 defineProps<{ recipe: RecipeSummary }>()
 </script>
@@ -8,7 +8,7 @@ defineProps<{ recipe: RecipeSummary }>()
 <template>
   <RouterLink :to="{ name: 'recipe-detail', params: { id: recipe.id } }" class="recipe-card">
     <div class="recipe-card__media">
-      <RecipeImage :src="recipe.photoUrl" :alt="recipe.title" />
+      <MediaImage :image-id="recipe.imageId" variant="md" :alt="recipe.title" />
     </div>
     <div class="recipe-card__body">
       <h3 class="recipe-card__title">{{ recipe.title }}</h3>

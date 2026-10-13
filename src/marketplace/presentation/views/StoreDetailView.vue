@@ -5,7 +5,7 @@ import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import Skeleton from 'primevue/skeleton'
 import EmptyState from '@/shared/presentation/components/EmptyState.vue'
-import SmartImage from '@/shared/presentation/components/SmartImage.vue'
+import MediaImage from '@/media/presentation/components/MediaImage.vue'
 import { useNotify } from '@/shared/presentation/composables/useNotify'
 import { ApiError } from '@/shared/domain/model/api-error'
 import { normalizeName } from '@/pantry/domain/model/ingredient-match'
@@ -71,7 +71,7 @@ const filtered = computed(() => {
     <template v-else>
       <header class="store__hero">
         <div class="store__logo">
-          <SmartImage :src="store.photoUrl" :alt="store.name" icon="pi pi-shop" />
+          <MediaImage :image-id="store.imageId" variant="sm" :alt="store.name" icon="pi pi-shop" />
         </div>
         <div>
           <h1>{{ store.name }}</h1>

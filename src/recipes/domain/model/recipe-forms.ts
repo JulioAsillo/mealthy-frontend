@@ -18,7 +18,8 @@ export interface RecipeForm {
   description: string
   preparationMinutes: number | null
   servings: number | null
-  photoUrl: string
+  /** Id devuelto por el contexto Media al subir la foto (null = sin foto). */
+  imageId: number | null
   ingredients: IngredientDraft[]
   steps: StepDraft[]
 }
@@ -40,7 +41,7 @@ export const emptyRecipeForm = (): RecipeForm => ({
   description: '',
   preparationMinutes: 30,
   servings: 2,
-  photoUrl: '',
+  imageId: null,
   ingredients: [emptyIngredient()],
   steps: [emptyStep()],
 })

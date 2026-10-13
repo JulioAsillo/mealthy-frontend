@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Store } from '@/marketplace/domain/model/marketplace.entity'
-import SmartImage from '@/shared/presentation/components/SmartImage.vue'
+import MediaImage from '@/media/presentation/components/MediaImage.vue'
 
 defineProps<{ store: Store }>()
 </script>
@@ -8,7 +8,7 @@ defineProps<{ store: Store }>()
 <template>
   <RouterLink :to="{ name: 'store-detail', params: { id: store.id } }" class="store-card">
     <div class="store-card__media">
-      <SmartImage :src="store.photoUrl" :alt="store.name" icon="pi pi-shop" />
+      <MediaImage :image-id="store.imageId" variant="sm" :alt="store.name" icon="pi pi-shop" />
     </div>
     <div class="store-card__body">
       <h3>{{ store.name }}</h3>

@@ -3,7 +3,8 @@ export interface StoreForm {
   description: string
   /** Solo se envía al crear: el RUC no se puede cambiar después. */
   ruc: string
-  photoUrl: string
+  /** Id devuelto por el contexto Media al subir la foto (null = sin foto). */
+  imageId: number | null
 }
 
 export interface ProductForm {
@@ -12,14 +13,14 @@ export interface ProductForm {
   price: number | null
   unit: string
   stock: number | null
-  photoUrl: string
+  imageId: number | null
 }
 
 export const emptyStoreForm = (): StoreForm => ({
   name: '',
   description: '',
   ruc: '',
-  photoUrl: '',
+  imageId: null,
 })
 
 export const emptyProductForm = (): ProductForm => ({
@@ -28,5 +29,5 @@ export const emptyProductForm = (): ProductForm => ({
   price: null,
   unit: 'unid',
   stock: 0,
-  photoUrl: '',
+  imageId: null,
 })
