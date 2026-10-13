@@ -61,6 +61,8 @@ watch(
 )
 
 const isAuthor = computed(() => !!recipe.value && auth.user?.id === recipe.value.authorId)
+/** Misma regla que el backend (OwnedResourceAuthorizationHandler): elimina el autor o un Admin. */
+const canDelete = computed(() => isAuthor.value || auth.hasRole('Admin'))
 
 const quantityFormat = new Intl.NumberFormat('es-PE', { maximumFractionDigits: 2 })
 
@@ -152,8 +154,9 @@ function confirmDelete() {
             <span><i class="pi pi-list" aria-hidden="true" /> {{ recipe.steps.length }} pasos</span>
           </div>
         </div>
-        <div v-if="isAuthor" class="detail__actions">
+        <div v-if="canDelete" class="detail__actions">
           <RouterLink
+            v-if="isAuthor"
             :to="{ name: 'recipe-edit', params: { id: recipe.id } }"
             custom
             v-slot="{ navigate }"
@@ -167,6 +170,7 @@ function confirmDelete() {
             />
           </RouterLink>
           <Button
+            v-if="canDelete"
             label="Eliminar"
             icon="pi pi-trash"
             severity="danger"

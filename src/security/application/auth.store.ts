@@ -6,7 +6,7 @@ import type { Role } from '@/security/domain/model/role'
 import type { SignInForm, SignUpForm, UpdateProfileForm } from '@/security/domain/model/auth-forms'
 import { authApi } from '@/security/infrastructure/auth.api'
 import { usersApi } from '@/security/infrastructure/users.api'
-import { refreshTokenStorage } from '@/security/infrastructure/refresh-token-storage'
+import { sessionHint } from '@/security/infrastructure/session-hint'
 import { UserAssembler } from '@/security/infrastructure/user.assembler'
 import type { AuthResource } from '@/security/infrastructure/auth.resources'
 
@@ -19,14 +19,14 @@ export const useAuthStore = defineStore('auth', () => {
 
   function applySession(auth: AuthResource): void {
     tokenStorage.set(auth.token)
-    refreshTokenStorage.set(auth.refreshToken)
+    sessionHint.set()
     user.value = UserAssembler.toEntity(auth.user)
   }
 
   /** Limpia la sesión local sin llamar al backend (sesión expirada). */
   function clearSession(): void {
     tokenStorage.clear()
-    refreshTokenStorage.clear()
+    sessionHint.clear()
     user.value = null
   }
 
@@ -39,21 +39,19 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function signOut(): Promise<void> {
-    const refreshToken = refreshTokenStorage.get()
     clearSession()
-    // Revoca en el backend; si falla, la sesión local ya está cerrada igual.
-    if (refreshToken) await authApi.signOut(refreshToken).catch(() => undefined)
+    // Revoca el refresh token y borra la cookie; si falla, la sesión local ya está cerrada igual.
+    await authApi.signOut().catch(() => undefined)
   }
 
   /**
-   * Canjea el refresh token (con rotación). Lo usa el interceptor HTTP ante un 401
-   * y la restauración de sesión al recargar. Devuelve el nuevo access token o null.
+   * Canjea el refresh token de la cookie HttpOnly (con rotación). Lo usa el interceptor HTTP ante
+   * un 401 y la restauración de sesión al recargar. Devuelve el nuevo access token o null.
    */
   async function refreshAccessToken(): Promise<string | null> {
-    const refreshToken = refreshTokenStorage.get()
-    if (!refreshToken) return null
+    if (!sessionHint.isSet()) return null
     try {
-      const auth = await authApi.refresh(refreshToken)
+      const auth = await authApi.refresh()
       applySession(auth)
       return auth.token
     } catch {

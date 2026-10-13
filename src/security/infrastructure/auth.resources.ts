@@ -14,11 +14,10 @@ export interface UserResource {
   createdAt: string
 }
 
+/** El refresh token no viene aquí: el backend lo deja en una cookie HttpOnly. */
 export interface AuthResource {
   token: string
   expiresAt: string
-  refreshToken: string
-  refreshTokenExpiresAt: string
   user: UserResource
 }
 
@@ -43,8 +42,4 @@ export interface UpdateProfileResource {
   lastName: string
   phone: string | null
   birthDate: string | null
-}
-
-export interface RefreshTokenResource {
-  refreshToken: string
 }
