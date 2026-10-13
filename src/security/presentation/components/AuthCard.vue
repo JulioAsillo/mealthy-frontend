@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import heroImage from '@/assets/images/healthy-foods.png'
+import heroImage from '@/assets/images/hero.webp'
 
 defineProps<{ title: string; subtitle?: string }>()
 </script>

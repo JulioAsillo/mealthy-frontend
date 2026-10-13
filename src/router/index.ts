@@ -4,6 +4,7 @@ import { securityPrivateRoutes, securityPublicRoutes } from '@/security/security
 import { recipesRoutes } from '@/recipes/recipes.routes'
 import { pantryRoutes } from '@/pantry/pantry.routes'
 import { marketplaceRoutes } from '@/marketplace/marketplace.routes'
+import { adminRoutes } from '@/admin/admin.routes'
 
 /**
  * Un solo layout. Cada bounded context aporta sus rutas desde <contexto>.routes.ts;
@@ -25,6 +26,7 @@ const routes: RouteRecordRaw[] = [
       ...recipesRoutes,
       ...pantryRoutes,
       ...marketplaceRoutes,
+      ...adminRoutes,
       {
         path: 'forbidden',
         name: 'forbidden',
