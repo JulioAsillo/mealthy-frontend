@@ -6,6 +6,8 @@ export interface Store {
   imageId: number | null
   ownerId: number
   createdAt: Date
+  /** Versión para concurrencia optimista (If-Match). */
+  version: number
 }
 
 export interface Product {
@@ -19,6 +21,7 @@ export interface Product {
   imageId: number | null
   createdAt: Date
   updatedAt: Date | null
+  version: number
 }
 
 /** Categorías sugeridas (el backend acepta texto libre de 2-50 caracteres). */

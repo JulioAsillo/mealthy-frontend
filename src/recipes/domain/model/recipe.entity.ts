@@ -24,6 +24,8 @@ export interface RecipeSummary {
 
 export interface RecipeDetail extends RecipeSummary {
   updatedAt: Date | null
+  /** Versión para concurrencia optimista (If-Match). */
+  version: number
   ingredients: Ingredient[]
   steps: Step[]
 }

@@ -53,9 +53,9 @@ export const useMyStoreStore = defineStore('my-store', () => {
     products.value = all
   }
 
-  async function createStore(form: StoreForm): Promise<void> {
+  async function createStore(form: StoreForm, idempotencyKey?: string): Promise<void> {
     store.value = MarketplaceAssembler.toStore(
-      await storesApi.create(MarketplaceAssembler.toCreateStore(form)),
+      await storesApi.create(MarketplaceAssembler.toCreateStore(form), idempotencyKey),
     )
     hasStore.value = true
     products.value = []
@@ -64,20 +64,29 @@ export const useMyStoreStore = defineStore('my-store', () => {
   async function updateStore(form: StoreForm): Promise<void> {
     if (!store.value) return
     store.value = MarketplaceAssembler.toStore(
-      await storesApi.update(store.value.id, MarketplaceAssembler.toUpdateStore(form)),
+      await storesApi.update(
+        store.value.id,
+        MarketplaceAssembler.toUpdateStore(form),
+        store.value.version,
+      ),
     )
   }
 
-  async function saveProduct(form: ProductForm, productId?: number): Promise<Product> {
+  /** Sin `existing` crea; con `existing` edita enviando su versión (If-Match). */
+  async function saveProduct(
+    form: ProductForm,
+    existing?: Product,
+    idempotencyKey?: string,
+  ): Promise<Product> {
     if (!store.value) throw new Error('No hay tienda registrada')
     const body = MarketplaceAssembler.toProductRequest(form)
     const saved = MarketplaceAssembler.toProduct(
-      productId
-        ? await productsApi.update(store.value.id, productId, body)
-        : await productsApi.create(store.value.id, body),
+      existing
+        ? await productsApi.update(store.value.id, existing.id, body, existing.version)
+        : await productsApi.create(store.value.id, body, idempotencyKey),
     )
-    products.value = productId
-      ? products.value.map((p) => (p.id === productId ? saved : p))
+    products.value = existing
+      ? products.value.map((p) => (p.id === existing.id ? saved : p))
       : [saved, ...products.value]
     return saved
   }

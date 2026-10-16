@@ -15,7 +15,8 @@ export default defineConfigWithVueTs(
     files: ['**/*.{vue,ts,mts,tsx}'],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**']),
+  // schema.ts lo genera openapi-typescript (npm run api:types): no se lintea ni se edita a mano
+  globalIgnores(['**/dist/**', '**/dist-ssr/**', 'src/shared/infrastructure/openapi/schema.ts']),
 
   ...pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,

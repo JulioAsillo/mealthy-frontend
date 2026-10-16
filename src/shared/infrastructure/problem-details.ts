@@ -16,6 +16,7 @@ const DEFAULT_TITLES: Record<number, string> = {
   403: 'Acceso denegado',
   404: 'Recurso no encontrado',
   409: 'Conflicto',
+  412: 'Alguien modificó este recurso antes que tú. Recarga para ver los cambios.',
   429: 'Demasiadas solicitudes, intenta en unos segundos',
   500: 'Error interno del servidor',
 }

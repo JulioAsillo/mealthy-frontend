@@ -1,17 +1,6 @@
-/** DTOs espejo de Pantry/Interfaces/Rest/Resources del backend. */
-export interface SupplyResource {
-  id: number
-  name: string
-  quantity: number
-  unit: string
-  expiresOn: string | null
-  createdAt: string
-  updatedAt: string | null
-}
+import type { ApiSchema } from '@/shared/infrastructure/openapi/api-schema'
 
-export interface SupplyRequestResource {
-  name: string
-  quantity: number
-  unit: string
-  expiresOn: string | null
-}
+/** DTOs de Pantry, generados desde el OpenAPI del backend (no editar a mano: npm run api:types). */
+
+export type SupplyResource = ApiSchema<'SupplyResponse'>
+export type SupplyRequestResource = ApiSchema<'SupplyRequest'>

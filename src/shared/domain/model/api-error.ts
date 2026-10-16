@@ -47,6 +47,11 @@ export class ApiError extends Error {
     return this.status === 404
   }
 
+  /** 412 (If-Match no coincide) o 409 de concurrencia: alguien guardó antes. */
+  get isStaleData(): boolean {
+    return this.status === 412
+  }
+
   /**
    * Primer mensaje de validación de un campo.
    * Insensible a mayúsculas y al prefijo "$." (ASP.NET usa "Email" o "$.email").

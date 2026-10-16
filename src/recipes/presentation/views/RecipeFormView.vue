@@ -26,7 +26,7 @@ const router = useRouter()
 const notify = useNotify()
 const auth = useAuthStore()
 const store = useRecipesStore()
-const { submitting, submit, fieldError, generalError } = useApiForm()
+const { submitting, submit, fieldError, generalError, idempotencyKey } = useApiForm()
 
 const isEdit = computed(() => props.id !== undefined)
 const original = ref<RecipeDetail | null>(null)
@@ -74,7 +74,7 @@ async function onSubmit() {
   const ok = await submit(async () => {
     saved = original.value
       ? await store.updateRecipe(original.value, form)
-      : await store.createRecipe(form)
+      : await store.createRecipe(form, idempotencyKey.value)
   })
   if (ok && saved) {
     notify.success(isEdit.value ? 'Receta actualizada' : '¡Receta publicada!')

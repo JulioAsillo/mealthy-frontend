@@ -1,4 +1,5 @@
 import { api } from '@/shared/infrastructure/base-api'
+import { idempotent, ifMatch } from '@/shared/infrastructure/request-headers'
 import type { PagedResult } from '@/shared/domain/model/paged-result'
 import type {
   CreateRecipeResource,
@@ -26,11 +27,15 @@ export const recipesApi = {
 
   getById: (id: number) => api.get<RecipeDetailResource>(`/recipes/${id}`),
 
-  create: (body: CreateRecipeResource) =>
-    api.post<RecipeDetailResource, CreateRecipeResource>('/recipes', body),
+  create: (body: CreateRecipeResource, idempotencyKey?: string) =>
+    api.post<RecipeDetailResource, CreateRecipeResource>(
+      '/recipes',
+      body,
+      idempotent(idempotencyKey),
+    ),
 
-  update: (id: number, body: UpdateRecipeResource) =>
-    api.put<RecipeDetailResource, UpdateRecipeResource>(`/recipes/${id}`, body),
+  update: (id: number, body: UpdateRecipeResource, version?: number) =>
+    api.put<RecipeDetailResource, UpdateRecipeResource>(`/recipes/${id}`, body, ifMatch(version)),
 
   remove: (id: number) => api.delete(`/recipes/${id}`),
 

@@ -45,15 +45,18 @@ export const usePantryStore = defineStore('pantry', () => {
     }
   }
 
-  async function create(form: SupplyForm): Promise<Supply> {
-    const supply = SupplyAssembler.toEntity(await pantryApi.create(SupplyAssembler.toRequest(form)))
+  async function create(form: SupplyForm, idempotencyKey?: string): Promise<Supply> {
+    const supply = SupplyAssembler.toEntity(
+      await pantryApi.create(SupplyAssembler.toRequest(form), idempotencyKey),
+    )
     supplies.value = [supply, ...supplies.value]
     return supply
   }
 
   async function update(id: number, form: SupplyForm): Promise<Supply> {
+    const version = supplies.value.find((s) => s.id === id)?.version
     const supply = SupplyAssembler.toEntity(
-      await pantryApi.update(id, SupplyAssembler.toRequest(form)),
+      await pantryApi.update(id, SupplyAssembler.toRequest(form), version),
     )
     supplies.value = supplies.value.map((s) => (s.id === id ? supply : s))
     return supply

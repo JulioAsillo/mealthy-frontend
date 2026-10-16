@@ -9,6 +9,8 @@ export interface Supply {
   expiresOn: Date | null
   createdAt: Date
   updatedAt: Date | null
+  /** Versión para concurrencia optimista (If-Match). */
+  version: number
 }
 
 export type ExpirationStatus = 'expired' | 'soon' | 'ok' | 'none'

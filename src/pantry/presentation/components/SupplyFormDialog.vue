@@ -20,7 +20,7 @@ const emit = defineEmits<{ saved: [supply: Supply] }>()
 
 const store = usePantryStore()
 
-const { submitting, submit, fieldError, generalError, reset } = useApiForm()
+const { submitting, submit, fieldError, generalError, reset, idempotencyKey } = useApiForm()
 const form = reactive<SupplyForm>(emptySupplyForm())
 
 const UNITS = ['unid', 'g', 'kg', 'ml', 'l', 'taza', 'paquete', 'lata']
@@ -38,7 +38,9 @@ const canSubmit = computed(
 async function onSubmit() {
   let saved: Supply | undefined
   const ok = await submit(async () => {
-    saved = props.supply ? await store.update(props.supply.id, form) : await store.create(form)
+    saved = props.supply
+      ? await store.update(props.supply.id, form)
+      : await store.create(form, idempotencyKey.value)
   })
   if (ok && saved) {
     emit('saved', saved)

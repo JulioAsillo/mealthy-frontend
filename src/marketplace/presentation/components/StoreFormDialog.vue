@@ -19,7 +19,7 @@ const props = defineProps<{ store: Store | null }>()
 const emit = defineEmits<{ saved: [] }>()
 
 const myStore = useMyStoreStore()
-const { submitting, submit, fieldError, generalError, reset } = useApiForm()
+const { submitting, submit, fieldError, generalError, reset, idempotencyKey } = useApiForm()
 const form = reactive<StoreForm>(emptyStoreForm())
 const uploadingImage = ref(false)
 
@@ -48,7 +48,7 @@ const canSubmit = computed(
 
 async function onSubmit() {
   const ok = await submit(() =>
-    props.store ? myStore.updateStore(form) : myStore.createStore(form),
+    props.store ? myStore.updateStore(form) : myStore.createStore(form, idempotencyKey.value),
   )
   if (ok) {
     emit('saved')

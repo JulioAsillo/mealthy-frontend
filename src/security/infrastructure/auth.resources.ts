@@ -1,45 +1,12 @@
-import type { Role } from '@/security/domain/model/role'
+import type { ApiSchema } from '@/shared/infrastructure/openapi/api-schema'
 
-/** DTOs tal como viajan por la red (espejo de Interfaces/Rest/Resources del backend). */
+/** DTOs de Security, generados desde el OpenAPI del backend (no editar a mano: npm run api:types). */
 
-export interface UserResource {
-  id: number
-  username: string
-  email: string
-  firstName: string
-  lastName: string
-  phone: string | null
-  birthDate: string | null
-  role: Role
-  createdAt: string
-}
+export type UserResource = ApiSchema<'UserResponse'>
 
 /** El refresh token no viene aquí: el backend lo deja en una cookie HttpOnly. */
-export interface AuthResource {
-  token: string
-  expiresAt: string
-  user: UserResource
-}
+export type AuthResource = ApiSchema<'AuthResponse'>
 
-export interface SignInResource {
-  email: string
-  password: string
-}
-
-export interface SignUpResource {
-  username: string
-  email: string
-  password: string
-  firstName: string
-  lastName: string
-  phone: string | null
-  birthDate: string | null
-  role: Role
-}
-
-export interface UpdateProfileResource {
-  firstName: string
-  lastName: string
-  phone: string | null
-  birthDate: string | null
-}
+export type SignInResource = ApiSchema<'SignInRequest'>
+export type SignUpResource = ApiSchema<'SignUpRequest'>
+export type UpdateProfileResource = ApiSchema<'UpdateProfileRequest'>

@@ -52,9 +52,9 @@ export const useRecipesStore = defineStore('recipes', () => {
   }
 
   // ---------- Escritura ----------
-  async function createRecipe(form: RecipeForm): Promise<RecipeDetail> {
+  async function createRecipe(form: RecipeForm, idempotencyKey?: string): Promise<RecipeDetail> {
     const recipe = RecipeAssembler.toDetail(
-      await recipesApi.create(RecipeAssembler.toCreateResource(form)),
+      await recipesApi.create(RecipeAssembler.toCreateResource(form), idempotencyKey),
     )
     cache.set(recipe.id, recipe)
     return recipe
@@ -66,7 +66,8 @@ export const useRecipesStore = defineStore('recipes', () => {
    */
   async function updateRecipe(original: RecipeDetail, form: RecipeForm): Promise<RecipeDetail> {
     const id = original.id
-    await recipesApi.update(id, RecipeAssembler.toUpdateResource(form))
+    // If-Match con la versión que se cargó: si otro guardó entretanto, 412 y no se pisa nada
+    await recipesApi.update(id, RecipeAssembler.toUpdateResource(form), original.version)
 
     // Ingredientes
     const keptIngredientIds = new Set(form.ingredients.flatMap((i) => (i.id ? [i.id] : [])))

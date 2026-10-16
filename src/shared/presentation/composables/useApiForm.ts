@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { ApiError } from '@/shared/domain/model/api-error'
+import { newIdempotencyKey } from '@/shared/infrastructure/request-headers'
 
 /**
  * Estado común de un formulario que llama al backend:
@@ -8,6 +9,12 @@ import { ApiError } from '@/shared/domain/model/api-error'
 export function useApiForm() {
   const submitting = ref(false)
   const error = ref<ApiError | null>(null)
+  /**
+   * Clave del envío en curso. Se conserva entre reintentos del MISMO formulario (si el primer intento
+   * llegó al servidor pero la respuesta se perdió, el reintento no crea un duplicado) y se renueva
+   * cuando el envío termina bien o el formulario se reinicia.
+   */
+  const idempotencyKey = ref(newIdempotencyKey())
 
   /** Ejecuta la acción; devuelve true si terminó bien. */
   async function submit(action: () => Promise<unknown>): Promise<boolean> {
@@ -16,6 +23,7 @@ export function useApiForm() {
     error.value = null
     try {
       await action()
+      idempotencyKey.value = newIdempotencyKey()
       return true
     } catch (e) {
       error.value =
@@ -39,7 +47,8 @@ export function useApiForm() {
 
   function reset() {
     error.value = null
+    idempotencyKey.value = newIdempotencyKey()
   }
 
-  return { submitting, error, submit, fieldError, generalError, reset }
+  return { submitting, error, idempotencyKey, submit, fieldError, generalError, reset }
 }

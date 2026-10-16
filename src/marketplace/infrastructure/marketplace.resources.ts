@@ -1,41 +1,10 @@
-/** DTOs espejo de Marketplace/Interfaces/Rest/Resources del backend. */
-export interface StoreResource {
-  id: number
-  name: string
-  description: string
-  ruc: string
-  imageId: number | null
-  ownerId: number
-  createdAt: string
-}
+import type { ApiSchema } from '@/shared/infrastructure/openapi/api-schema'
 
-export interface CreateStoreResource {
-  name: string
-  description: string
-  ruc: string
-  imageId: number | null
-}
+/** DTOs de Marketplace, generados desde el OpenAPI del backend (no editar a mano: npm run api:types). */
 
-export type UpdateStoreResource = Omit<CreateStoreResource, 'ruc'>
+export type StoreResource = ApiSchema<'StoreResponse'>
+export type CreateStoreResource = ApiSchema<'CreateStoreRequest'>
+export type UpdateStoreResource = ApiSchema<'UpdateStoreRequest'>
 
-export interface ProductResource {
-  id: number
-  storeId: number
-  name: string
-  category: string
-  price: number
-  unit: string
-  stock: number
-  imageId: number | null
-  createdAt: string
-  updatedAt: string | null
-}
-
-export interface ProductRequestResource {
-  name: string
-  category: string
-  price: number
-  unit: string
-  stock: number
-  imageId: number | null
-}
+export type ProductResource = ApiSchema<'ProductResponse'>
+export type ProductRequestResource = ApiSchema<'ProductRequest'>
